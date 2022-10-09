@@ -1,0 +1,27 @@
+{% extends 'based.html' %}
+{% block title %} 
+    Record
+{% endblock %}
+
+{% block head%}
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block body %} 
+<div class = 'question'>{{question|escape}}</div>
+{% endblock%}
+
+
+
+{% block script-js %}
+    let question = document.getElementsByClassName('question')[0].textContent
+    console.log(question)
+
+    question = JSON.parse({{question}})
+
+    console.log(question)
+
+{% endblock%}

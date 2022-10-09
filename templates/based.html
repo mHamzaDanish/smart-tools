@@ -1,0 +1,75 @@
+{%load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Hugo 0.88.1">
+        
+        <title>JO - {% block title %}{% endblock %}</title>
+            
+        <link rel="canonical" href="">
+        <link href="{% static 'web/assets/dist/css/bootstrap.min.css' %}" rel="stylesheet"> 
+        <link href="{% static 'web/css/dashboard.css' %}" rel="stylesheet">
+        {% block main-title %} {% endblock %}
+        <style>
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+        
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+            .not-visible {
+                display: none;
+            }
+            .errorlist {
+                list-style: none;
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .bd-placeholder-img {
+                font-size: 1.125rem;
+                text-anchor: middle;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                user-select: none;
+            }
+
+            @media (min-width: 768px) {
+                .bd-placeholder-img-lg {
+                    font-size: 3.5rem;
+                }
+            }
+        {% block css %}
+        {% endblock %}
+        </style>
+    </head>
+    <body>
+        {% load static %}
+        {% comment %} {% include "header.html" %} {% endcomment %}
+        {% include "nav.html" %}
+        {%block body%} 
+        {%endblock%}
+        <script src="{% static 'web/js/jquery-3.6.0.slim.min.js' %}"></script>
+        <script src="{% static 'web/js/jquery.min.js' %}"></script>
+        <script src="{% static 'web/js/jquery.dataTables.min.js' %}"></script>
+        <script src="{% static 'web/assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'web/js/feather.min.js' %}"></script>
+        <script src="{% static 'web/js/dashboard.js' %}"></script>
+        <script src="{% static 'web/assets/dist/js/htmx.min.js' %}" type="test/javascript"></script>
+        <script src="{% static 'web/assets/dist/js/htmx.js' %}"     type="test/javascript"></script>
+        <script>
+        {%block script-js%}
+        {%endblock%}
+        </script>
+    </body>
+</html>
