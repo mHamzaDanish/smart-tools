@@ -7,21 +7,70 @@
 {% endblock %}
 
 {% block css %}
+
 {% endblock %}
 
 
 {% block body %} 
-<div class = 'question'>{{question|escape}}</div>
+
+<div class="row">
+    <div class="days-left position-relative">
+      <div class="days-left-popup"><i class="fa-solid fa-clock"></i> 
+        <span id = 'time'></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <br>
+    <br>
+    <ul id = 'question' style="list-style: none;" >
+    </ul>
+    <button class="btn btn-primary" type="button" onClick="next_question()" id = 'next'> Start</button>
+</div>
+
 {% endblock%}
 
 
 
 {% block script-js %}
-    let question = document.getElementsByClassName('question')[0].textContent
-    console.log(question)
+<script>
 
-    question = JSON.parse({{question}})
+    first  	= {{first_question|safe}};
+    second 	= {{second_question|safe}};
+    third 	= {{third_question|safe}};
 
-    console.log(question)
+    var counter = 0;
+    function next_question(){
+        counter++;
+        if (counter == 1){
+            question.innerHTML = '<li><h3>' + first.join('</h3></li><li><h3>') + '</h3></li>';
+            document.getElementById('next').innerHTML = 'Next'
+            document.getElementById('time').innerHTML = 'Optimal time for each step is {{step_1_duration}} seconds'
+        }
+        else if ( counter == 2){
+            question.innerHTML = '<li><h3>' + second.join('</h3></li><li><h3>') + '</h3></li>';
+            document.getElementById('time').innerHTML = 'Optimal time for each step is {{step_2_duration}} seconds'
+
+        }
+        else if ( counter == 3){
+            question.innerHTML = '<li><h3>' + third.join('</h3></li><li><h3>') + '</h3></li>';
+            document.getElementById('time').innerHTML = 'Optimal time for each step is {{step_3_duration}} seconds'
+            document.getElementById('next').innerHTML = 'Finsh'
+        }
+        else if ( counter == 4){
+            document.getElementById("next").disabled = true;
+            window.location.replace("{% url 'report'%}")
+
+        }
+    }
+</script>
 
 {% endblock%}
+
+
+
+
+
+

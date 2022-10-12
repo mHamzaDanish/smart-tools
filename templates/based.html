@@ -13,6 +13,15 @@
         <link rel="canonical" href="">
         <link href="{% static 'web/assets/dist/css/bootstrap.min.css' %}" rel="stylesheet"> 
         <link href="{% static 'web/css/dashboard.css' %}" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900" rel="stylesheet">
+		
+		<link rel="stylesheet" href="{% static 'web/css/owl.carousel.min.css' %}">
+    	<link rel="stylesheet" href="{% static 'web/css/owl.theme.default.min.css' %}">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css">
+		<link rel="stylesheet" href="{% static 'web/css/animate.css' %}">
+		<link rel="stylesheet" href="{% static 'web/css/style.css' %}">
+
         {% block main-title %} {% endblock %}
         <style>
             /* Chrome, Safari, Edge, Opera */
@@ -67,9 +76,14 @@
         <script src="{% static 'web/js/dashboard.js' %}"></script>
         <script src="{% static 'web/assets/dist/js/htmx.min.js' %}" type="test/javascript"></script>
         <script src="{% static 'web/assets/dist/js/htmx.js' %}"     type="test/javascript"></script>
-        <script>
+
+        <script src="{% static 'web/js/jquery.min.js' %}"></script>
+        <script src="{% static 'web/js/popper.js' %}"></script>
+        <script src="{% static 'web/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'web/js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'web/js/main.js' %}"></script>
+
         {%block script-js%}
         {%endblock%}
-        </script>
     </body>
 </html>
