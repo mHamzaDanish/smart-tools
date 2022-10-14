@@ -30,97 +30,125 @@
 </div>
 <!-- Time Duration  -->
 
-{% comment %}  {% endcomment %}
-<section class="ftco-section">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="slider-hero">
-          <div class="featured-carousel owl-carousel">
-            {% for dd in step_data2 %}
-            <div class="item">
-              <div class="work">
-                <div class="d-flex align-items-center justify-content-center" 
-                >
-                  <div class="text text-center">
-                    {% for data in dd.question %}
-                      <h4> {{data}}</h4>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-
-          <br>
-          <br>
-          {% comment %} <div class="my-5 text-center">
-            <ul class="thumbnail">
-              {% for step in step_range %}
-                <li class=" step"><a href="#"> {{step}} </a></li>
-              {% endfor %}
-            </ul>
-          </div> {% endcomment %}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-
 <div class="container-xl">
 	<div class="row">
 		<div class="col-lg-8 mx-auto">
-			<h2>Testimonials</h2>
-			<div id="myCarousel" class="carousel slide" data-ride="carousel">
-				<!-- Carousel indicators -->
-				<ol class="carousel-indicators">
-					<li data-target="#myCarousel" data-slide-to="0" class="active">3</li>
-					<li data-target="#myCarousel" data-slide-to="1">1</li>
-					<li data-target="#myCarousel" data-slide-to="2">2</li>
-				</ol>   
-				<!-- Wrapper for carousel items -->
+			<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
 				<div class="carousel-inner">
-					<div class="carousel-item active">
-						<div class="img-box"><img src="/examples/images/clients/1.jpg" alt=""></div>
-						<p class="testimonial">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Idac bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet.</p>
-						<p class="overview"><b>Paula Wilson</b>, Media Analyst</p>
-					</div>
-					<div class="carousel-item">
-						<div class="img-box"><img src="/examples/images/clients/2.jpg" alt=""></div>
-						<p class="testimonial">Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Utmtc tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio.</p>
-						<p class="overview"><b>Antonio Moreno</b>, Web Developer</p>
-					</div>
-					<div class="carousel-item">
-						<div class="img-box"><img src="/examples/images/clients/3.jpg" alt=""></div>
-						<p class="testimonial">Phasellus vitae suscipit justo. Mauris pharetra feugiat ante id lacinia. Etiam faucibus mauris id tempor egestas. Duis luctus turpis at accumsan tincidunt. Phasellus risus risus, volutpat vel tellus ac, tincidunt fringilla massa. Etiam hendrerit dolor eget rutrum.</p>
-						<p class="overview"><b>Michael Holz</b>, Seo Analyst</p>
-					</div>
+            {% for dd in step_data2 %}
+
+              <div class="carousel-item" id = 'step-{{dd.page_no}}'>
+                <div class="days-left position-relative">
+                  <div class="days-left-popup"><i class="fa-solid fa-clock"></i> 
+                    <span id = 'time'> {{dd.duration_in_sec}}</span>
+                  </div>
+                </div>
+                
+                {% for data in dd.question %}
+                  <h3 class="testimonial text-center">{{data}}</h3>
+                {% endfor %}
+              </div>
+            {% endfor %}
 				</div>
-				<!-- Carousel controls -->
-				<a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
-					<i class="fa fa-angle-left">prev</i>dd
-				</a>
-				<a class="carousel-control-next" href="#myCarousel" data-slide="next">
-					<i class="fa fa-angle-right">next</i>ddd
-				</a>
 			</div>
 		</div>
 	</div>
 </div>
+<button onclick="next()" class="nect">Start</button>
+
+<center>
+  {% comment %} <p><button id="record"> Record</button></p> {% endcomment %}
+  <button id="record-start">Start</button>
+  <button id="record-pause">pause</button>
+  <button id="record-resume">Resume</button>
+  <button id="record-stop">Stop</button>
+
+
+  <div id="sound-clip"></div>
+</center>
+
+<form method="post" enctype="multipart/form-data" hidden>
+  {% csrf_token %}
+  <input type="file" name="audio-file" id = 'audio-file'>
+  <button type="submit">Submit</button>
+  </form> 
+
 {% endblock%}
 
 
 
 {% block script-js %}
 <script>
-    var data = '{{data|safe}}'
-    var json = JSON.parse(data)
-    console.log(data)
+  
+    var page_number_list = '{{page_number_list}}';
+    var counter = 0;
+    page_number_list = JSON.parse(page_number_list)
+    function next(){
+      if (counter<page_number_list.length )
+      {
+            document.getElementsByClassName('nect')[0].innerHTML = 'Next'
+            try {
+              var current   = document.getElementsByClassName(" active");
+              current[0].className = current[0].className.replace(" active", "");            }
+            catch(err) {};
+
+            id_           = 'step-'+page_number_list[counter];
+            document.getElementById(id_).className += ' active';
+            counter++;
+      }
+      else if (counter===page_number_list.length )
+      {
+        document.getElementsByClassName('nect')[0].innerHTML = 'Finsh'
+        window.location.replace("{% url 'report'%}")
+      }
+
+
+    }
+
+
+
+    // Recording
+
+/*
+    var wavesurfer = WaveSurfer.create({
+      container     : '#waveform',
+      waveColor     : 'black',
+      interact      : false,
+      cursorWidth   : 0,
+      plugins: [
+        WaveSurfer.microphone.create()
+      ]
+    });
+    
+    wavesurfer.microphone.on('deviceReady', function(stream) {
+        console.log('Device ready!', stream);
+    });
+    wavesurfer.microphone.on('deviceError', function(code) {
+        console.warn('Device error: ' + code);
+    });
+    
+    // start the microphone
+    wavesurfer.microphone.start();
+    
+    // pause rendering
+    //wavesurfer.microphone.pause();
+    
+    // resume rendering
+    //wavesurfer.microphone.play();
+    
+    // stop visualization and disconnect microphone
+    //wavesurfer.microphone.stopDevice();
+    
+    // same as stopDevice() but also clears the wavesurfer canvas
+    //wavesurfer.microphone.stop();
+    
+    // destroy the plugin
+    //wavesurfer.microphone.destroy();
+
+*/
 
 </script>
+
 
 {% endblock%}
 

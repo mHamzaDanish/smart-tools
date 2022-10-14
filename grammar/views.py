@@ -1,3 +1,4 @@
+from django.http import  HttpResponse
 from django.shortcuts import render
 from grammar.models import *
 import itertools
@@ -46,21 +47,28 @@ def record_audio(request):
 
     return render(request, 'grammar/record.html', context)
 
+from django.conf import settings
 
+your_media_root = settings.MEDIA_ROOT
 
 def record_audio2(request):
-    step_data   = {}
-    step        = Step.objects.filter(active= True).prefetch_related('step_questions').order_by('page_number')
-    step_count  = step.count()
+    step_data           = {}
+    step                = Step.objects.filter(active= True).prefetch_related('step_questions').order_by('page_number')
+    step_count          = step.count()
+    page_number_list    = list(step.values_list('page_number', flat=True))
+
 
     step_data2 = []
     for i in step:
         step_data2.append ({ 
+                'page_no'               : i.page_number,
                 'duration_in_sec'       : i.duration_in_sec, 
                 'question'              : (list(i.step_questions.filter(active = True).order_by('?').values_list('question', flat=True)[:int(i.no_question_to_display)]))
         })
        
     
+
+
     for i in step:
         step_data[i.page_number] = { 
                 'duration_in_sec'       : i.duration_in_sec, 
@@ -70,13 +78,47 @@ def record_audio2(request):
 
     data = [{'step_count':step_count, 'data': step_data}]
 
+    if request.method == 'POST':
+        audio_file = request.FILES.get("audio-file")
+        z = [i for i in audio_file.chunks()]
+        z = "".join(map(str,z))
+        record = Recording.objects.create(session_id=str(1), audio_recording = z)
+        record.save()
+
+        
+        filename = f'{your_media_root}/1_demo.wav'
+        with open(filename, 'wb+') as destination:
+            for chunk in audio_file.chunks():
+                destination.write(chunk)
+
+        return HttpResponse('success')
+
+
+
+
+        
+
     context = {
         'step_count'    : step_count,
         'data'          : json.dumps(data),
         'step_range'    : range(1,step_count+1),
-        'step_data2'    : step_data2
+        'step_data2'    : step_data2,
+        'page_number_list' : page_number_list
     }
     return render(request, 'grammar/record_new_test.html', context)
+
+
+
+
+def read(request):
+    z = Recording.objects.all()
+    for i in z:
+        zz = i.audio_recording
+    filename = '23_demo.wav'
+    with open(filename, 'wb+') as destination:
+        destination.write(str(zz))
+    return HttpResponse('success')
+    
 
 
 

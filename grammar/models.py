@@ -1,7 +1,10 @@
+from email.mime import audio
 from email.policy import default
 from enum import unique
 from multiprocessing.dummy import active_children
 from django.db import models
+from django.core.files import File
+from io import BytesIO
 
 # Create your models here.
 
@@ -27,16 +30,11 @@ class Question(models.Model):
     def __str__(self):
         return self.question
 
+def upload_location_activity_images(instance, filename):
+    file_path = 'the_'+str(filename)
+    filename = f'{file_path}_demo1.wav'
+    return file_path
 
-
-# result = []
-# for album, songs in itertools.groupby(Question.objects.order_by('album'), lambda s: s.album):
-#     result.append({
-#         "album": album,
-#         "tracks": [{
-#             "title": song.title,
-#             "singer": song.singer
-#         } for song in songs]
-#     })
-
-
+class Recording(models.Model):
+    session_id = models.TextField()
+    audio_recording       =  models.FileField(upload_to=upload_location_activity_images)

@@ -1,3 +1,5 @@
-from django.test import TestCase
+import base64
+file = '/home/hd/Documents/Python/Django/personal_project/Django/smart-tools/media/the_blob'
 
-# Create your tests here.
+with open('file.webm', 'wb') as f_vid:
+    f_vid.write(base64.b64encode(file))
