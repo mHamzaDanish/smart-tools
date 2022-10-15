@@ -6,15 +6,10 @@ let recording = false;
 
 // Ask user for access to the microphone.
 if (navigator.mediaDevices) {
-  navigator.mediaDevices.getUserMedia({"audio": true}).then((stream) => {
-
+    navigator.mediaDevices.getUserMedia({"audio": true}).then((stream) => {
     const mediaRecorder = new MediaRecorder(stream);
-
-
-
-
-
     let chunks = [];
+
     mediaRecorder.ondataavailable = (event) => {
       chunks.push(event.data);
       console.log(chunks);
@@ -31,9 +26,6 @@ if (navigator.mediaDevices) {
       audio.src = window.URL.createObjectURL(blob);
       console.log(audio.src )
       sendAudioFile(blob);
-
-
-      // Clear the `chunks` buffer so that you can record again.
       chunks = [];
     };
 
@@ -77,18 +69,14 @@ if (navigator.mediaDevices) {
           mediaRecorder.pause();
           recording = false;
           console.log('Pause recording')
-
-        
       });
 
 
 
   }).catch((err) => {
-    // Throw alert when the browser is unable to access the microphone.
     alert("Oh no! Your browser cannot access your computer's microphone.");
   });
 } else {
-  // Throw alert when the browser cannot access any media devices.
   alert("Oh no! Your browser cannot access your computer's microphone. Please update your browser.");
 }
 
@@ -115,7 +103,7 @@ const sendAudioFile = file => {
   const formData = new FormData();
   formData.append('audio-file', file);
   formData.append('csrfmiddlewaretoken', document.getElementsByName('csrfmiddlewaretoken')[0].value)
-  return fetch('http://localhost:8000/record2/', {
+  return fetch('http://localhost:9000/record2/', {
     method: 'POST',
     body: formData
   });

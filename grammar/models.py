@@ -31,10 +31,26 @@ class Question(models.Model):
         return self.question
 
 def upload_location_activity_images(instance, filename):
-    file_path = 'the_'+str(filename)
-    filename = f'{file_path}_demo1.wav'
+    file_path = 'user/{user_id}/{filename}'.format(
+            session_id  = instance.session_id,
+            user_id     = instance.user_id,
+            filename    = f"microphone_audio.mp3"
+        )
     return file_path
 
+
+import uuid
+
 class Recording(models.Model):
-    session_id = models.TextField()
-    audio_recording       =  models.FileField(upload_to=upload_location_activity_images)
+    session_id              = models.TextField()
+    user_id                 = models.CharField(max_length=100, blank=True, unique=True, default=uuid.uuid4)
+    audio_recording         = models.FileField(upload_to=upload_location_activity_images)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        filename = self.audio_recording.path + '.wav'
+        with open(filename, 'wb+') as destination:
+            for chunk in self.audio_recording.chunks():
+                destination.write(chunk)
+
